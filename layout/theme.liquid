@@ -174,9 +174,16 @@
       if (!window.Shopify.designMode) {
         var currentHostname = window.location.hostname;
         var storefrontHostname = "{{ settings.storefront_hostname }}";
+        var currentPath = window.location.pathname;
+        var isProductPath = currentPath.includes("products");
 
         if (currentHostname !== storefrontHostname) {
           var redirectUrl = window.location.href.replace(currentHostname, storefrontHostname);
+
+          if(isProductPath){
+            var productTitle = currentPath.replace("/products/", "/product/");
+            redirectUrl = redirectUrl.replace(storefrontHostname + currentPath, storefrontHostname + productTitle);
+          }
 
           var customRedirectsStr = "{{ settings.custom_redirects | newline_to_br | strip_newlines | replace: ' ', '' }}";
           if (customRedirectsStr) {
